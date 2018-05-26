@@ -1,7 +1,6 @@
 # https://en.wikipedia.org/wiki/Seven-segment_display
-class SevenSegmentDecoder
-  def self.to_numbers(segment)
-    keys = {
+class SevenSegment
+  @keys = {
       " _ | ||_|" => "0",
       "     |  |" => "1",
       " _  _||_ " => "2",
@@ -14,8 +13,13 @@ class SevenSegmentDecoder
       " _ |_| _|" => "9"
     }
 
+  def self.to_numbers(segment)
     lines = segment.split(/\n/).map{|line| line.scan(/.../)}
-    numbers = lines[0].zip(lines[1],lines[2]).map{|n| keys[n.join]}.join
-    numbers.to_i
+    lines.transpose.map{|n| @keys[n.join]}.join.to_i
+  end
+
+  def self.to_segment(number)
+    segment = number.to_s.chars.map { |n| @keys.key(n).scan(/.../) }
+    segment.transpose.map { |s| s.join }.join("\n")
   end
 end
